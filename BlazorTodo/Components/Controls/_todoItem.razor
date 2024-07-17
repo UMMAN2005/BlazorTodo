@@ -1,0 +1,26 @@
+﻿@rendermode InteractiveServer
+
+<div class="input-group">
+  <div class="row">
+    <input type="text" class='form-control @(Todo.IsCompleted ? "text-success" : "")' placeholder="Title" @bind-value="Todo.Title" @bind-value:event="oninput" />
+    <button style="" @onclick="Complete" class="text-success">✓</button>
+    <button style="" @onclick="Delete" class="text-danger">✗</button>
+  </div>
+</div>
+
+@code {
+  [Parameter]
+  public TodoItem Todo { get; set; } = new();
+
+  [Parameter]
+  public EventCallback<TodoItem> ToDoChanged { get; set; }
+
+  private async Task Complete() {
+    Todo.IsCompleted = !Todo.IsCompleted;
+    await ToDoChanged.InvokeAsync(Todo);
+  }
+
+  private async Task Delete() { 
+    await ToDoChanged.InvokeAsync(null);
+  }
+}

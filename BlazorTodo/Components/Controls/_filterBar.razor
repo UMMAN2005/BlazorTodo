@@ -1,0 +1,29 @@
+﻿
+<div class="row">
+  <div class="col-md-6">
+    <select class="form-control" @onchange="Sorting">
+      @foreach (var category in Categories) {
+        <option value="@category">@category</option>
+      }
+    </select>
+  </div>
+</div>
+
+
+@code {
+  [Parameter]
+  public string Sort { get; set; } = string.Empty;
+
+  [Parameter]
+  public EventCallback<string> SortChanged { get; set; }
+
+  public List<string> Categories { get; set; } = new() { "All", "Active", "Completed" };
+
+  private async Task Sorting(ChangeEventArgs e) {
+    if (e.Value == null) {
+      return;
+    }
+    Sort = e.Value.ToString()!;
+    await SortChanged.InvokeAsync(Sort);
+  }
+}

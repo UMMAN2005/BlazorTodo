@@ -1,0 +1,33 @@
+﻿@rendermode InteractiveServer
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search" @bind="SearchTerm" @oninput="Search" />
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" @onclick="ClearSearch">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@code {
+  [Parameter]
+  public string SearchTerm { get; set; } = string.Empty;
+
+  [Parameter]
+  public EventCallback<string> SearchTermChanged { get; set; }
+
+  private async Task Search(ChangeEventArgs e) {
+    if (e.Value == null) {
+      return;
+    }
+    SearchTerm = e.Value.ToString()!;
+    await SearchTermChanged.InvokeAsync(SearchTerm);
+  }
+
+  private async Task ClearSearch() {
+    SearchTerm = string.Empty;
+    await SearchTermChanged.InvokeAsync(SearchTerm);
+  }
+}
